@@ -370,22 +370,10 @@ server_page3 <- function(input, output, session, selected_movie) {
   ))
 }
 
-# ===== EXEMPLE D'INTÉGRATION DANS L'APP COMPLÈTE =====
-# (À adapter selon votre structure existante)
+# =====INTÉGRATION DANS L'APP COMPLÈTE =====
 
 ui <- navbarPage(
-  "Whatch ?",
-  
-  # Page 1 - Accueil
-  tabPanel("Accueil",
-           # ... votre code page 1
-  ),
-  
-  # Page 2 - Sélection
-  tabPanel("Recommandations",
-           # ... votre code page 2
-  ),
-  
+  ### notre scritp des autres pages
   # Page 3 - Détails (conditionnelle)
   conditionalPanel(
     condition = "output.show_details",
