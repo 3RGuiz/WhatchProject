@@ -1,0 +1,49 @@
+---
+title: "Whatch ?"
+author: "Emile, Alexis, Guillaume, Valentin"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+ pdf_document:
+    toc: true
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(knitr)
+```
+
+# INTRODUCTION
+
+Avec la multiplication des plateformes de streaming et l’abondance de contenus audiovisuels en tous genres disponibles aujourd’hui, choisir un film ou une série est devenu une tâche complexe.Face à des catalogues toujours plus vastes, les utilisateurs passent souvent plus de temps à chercher un programme qu’à réellement le regarder. C’est dans ce contexte que s’inscrit notre projet : le développement d’une application interactive visant à faciliter la recommandation de films en fonction des préférences et de l’humeur de l’utilisateur.
+L’objectif principal de cette application est de proposer une expérience simple, intuitive et visuelle, permettant à un utilisateur de trouver rapidement des films correspondant à ses critères personnels. La particularité de cette application est quelle se base sur des critères subjectifs (humeur, niveau de fatigue, envie de découverte…). L’application sera mise en place avec l’utilisation du package Shiny sous R Studio.
+
+
+# PAGE 1 : Démarage
+
+L’application est pensée comme un outil destiné à tout public. Dès l’ouverture, l’utilisateur accèdera à une page d’accueil épurée , sur laquelle figure une phrase d’accroche telle que « Abracadabra on choisi pour toi ! ». Cette page a pour objectif de capter l’attention de l’utilisateur et de l’inviter à débuter son expérience via un bouton menant à la page de sélection.
+
+
+# PAGE 2 : renseignements utilisateur
+
+L’onglet de choix constitue le cœur de l’application. Elle est organisée de manière à optimiser la lisibilité et la navigation : les critères de sélection (humeur, genres préférés, durée, note minimale…) sont disposés sur la partie gauche de l’écran. Une fois les critères choisis, l’utilisateur valide sa sélection, ce qui déclenche l’affichage, sur la partie droite de l’écran, d’une liste de films recommandés, classés par ordre de pertinence selon les préférences indiquées.
+
+## Tableau de synthèse des entrées utilisateur
+| Critère utilisateur | Type d’entrée Shiny | Modalité de saisie | Justification |
+|-------------|--------------|--------------------|--------------------------------|
+| Temps disponible | liste déroulante | < 30 min ;30–60 min; 1–2 h; > 2 h | Les intervalles sont plus réalistes qu’un temps exact et facilitent le filtrage des durées des films. |
+| Niveau de fatigue | Curseur (%) | 0 % (pas fatigué) à 100 % (très fatigué) | Permet une gradation fine et intuitive, traduisible en seuils de durée et de complexité du contenu. |
+| Envie du moment (émotion) | liste déroulante à choix multiples | Rire; Pleurer; Action; Romance; angoisse; Détente; m'instrire; peur| L’utilisateur peut ressentir plusieurs envies simultanément, les genres associés sont pondérés plutôt qu’exclusifs. |
+| Envie de découverte | Curseur (%) | 0 % (rester dans ses habitudes) à 100 % (découvrir) | Permet de moduler la popularité et la notoriété des œuvres recommandées |
+| Période de sortie des films | liste déroulante à choix multiples | Avant 1990; 1990–2005; 2005–2015; Après 2015 | Ces périodes correspondent à des ruptures culturelles et technologiques pertinentes dans le cinéma. |
+| Abonnements plateformes (optionnel) | liste déroulante à choix multiples | Netflix; Prime Video; Disney+; Canal +; Autres | Option facultative afin de ne pas restreindre l’application, mais permettant un filtrage plus précis si renseigné, pour ce critère nous n'avons pas encore les données donc il ne sera surement pas réalisable dans la semaine. |
+
+
+# PAGE 3 : Résumé du film
+
+Afin d’enrichir l’expérience utilisateur, une fonctionnalité supplémentaire permet d’accéder à une fiche descriptive détaillée pour chaque film proposé. En cliquant sur une suggestion, l’utilisateur peut consulter directement, sans changer de page, des informations telles que le résumé du film, ses genres, sa durée, son année de sortie, sa note moyenne, (ainsi que les plateformes sur lesquelles il est disponible) . Ce choix d’ouverture dynamique des contenus vise à rendre l’application plus fluide, visuelle et pratique.
+
+# Onglet qui sommes nous
+
+Enfin, un onglet secondaire, accessible via un bandeau de navigation situé en haut de l’application (à la manière d’un site web), est dédié à la présentation générale du projet. Cet onglet comprend une explication du fonctionnement de l’application, une présentation des développeurs, ainsi qu’un aperçu du contexte et des motivations ayant conduit à la réalisation de ce projet.
+
