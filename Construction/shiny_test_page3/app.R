@@ -56,6 +56,31 @@ get_providers <- function(tmdb_id, api_key, country = "FR") {
   }
 }
 
+###########====================================================
+# ajout des 5 acteurs principaux du film
+###########====================================================
+
+get_movie_credits <- function(tmdb_id, api_key) {
+  url <- paste0(
+    "https://api.themoviedb.org/3/movie/",
+    tmdb_id,
+    "/credits?api_key=", api_key,
+    "&language=fr-FR"
+  )
+  res <- fromJSON(content(GET(url), "text"))
+  
+  if (!is.null(res$cast) && length(res$cast) > 0) {
+    # Retourner les 5 premiers acteurs principaux
+    head(res$cast, 5)
+  } else {
+    NULL
+  }
+}
+###########====================================================
+# 
+###########====================================================
+
+
 # =============================================================================
 # DONNÉES DE TEST
 # =============================================================================
@@ -378,7 +403,20 @@ server <- function(input, output, session) {
       }, error = function(e) {
         NULL
       })
+###########====================================================
+# ajout des 5 acteurs principaux du film
+###########====================================================      
+      incProgress(0.6, detail = "Récupération des acteurs...")
       
+      # Récupérer les acteurs
+      credits <- tryCatch({
+        get_movie_credits(tmdb_id, api_key)
+      }, error = function(e) {
+        NULL
+      })
+#####======================================================================
+      
+####==============================================================================      
       incProgress(0.7, detail = "Récupération des plateformes...")
       
       # Récupérer les plateformes
@@ -458,6 +496,52 @@ server <- function(input, output, session) {
                        icon("tags"), " Genres"),
                     div(genres_tags)
                 ),
+                
+ ###########====================================================
+# ajout des 5 acteurs principaux du film
+###########====================================================
+                # ← NOUVEAU : Acteurs principaux
+                if (!is.null(credits) && nrow(credits) > 0) {
+                  div(style = "margin-top: 20px;",
+                      h4(style = "color: #667eea; margin-bottom: 10px;", 
+                         icon("users"), " Acteurs principaux"),
+                      div(style = "display: flex; flex-wrap: wrap; gap: 10px;",
+                          lapply(1:min(10, nrow(credits)), function(i) {
+                            actor <- credits[i, ]
+                            
+                            # URL de la photo de l'acteur
+                            actor_photo <- if (!is.null(actor$profile_path) && !is.na(actor$profile_path)) {
+                              paste0("https://image.tmdb.org/t/p/w185", actor$profile_path)
+                            } else {
+                              "https://via.placeholder.com/185x278?text=Photo+non+disponible"
+                            }
+                            
+                            # Carte acteur
+                            div(
+                              style = "width: 120px; text-align: center; background: #f9f9f9; 
+                   border-radius: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                   transition: all 0.3s;",
+                              onmouseover = "this.style.transform='translateY(-5px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)';",
+                              onmouseout = "this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';",
+                              
+                              img(src = actor_photo, 
+                                  style = "width: 100px; height: 150px; object-fit: cover; 
+                       border-radius: 8px; margin-bottom: 8px;"),
+                              
+                              div(style = "font-weight: bold; font-size: 0.85em; color: #333; margin-bottom: 3px;",
+                                  actor$name),
+                              
+                              div(style = "font-size: 0.75em; color: #666; font-style: italic;",
+                                  actor$character)
+                            )
+                          })
+                      )
+                  )
+                },
+                
+###########====================================================
+ 
+###########====================================================
                 
                 # Plateformes
                 div(style = "margin-top: 20px; background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
