@@ -336,9 +336,8 @@ apply_emotion_filter <- function(data, emotion_key, custom_alpha = NULL,
 
 ui <- navbarPage(
   title = div(
-    img(src = "bobine.png", height = "30px", style = "margin-right: 10px; vertical-align: middle;"),
-    "What'ch ?"
-  ),
+    style = "display: flex; align-items: top; font-size: 36px; font-weight: bold;",
+    "What'ch ?"),
   theme = shinytheme("cyborg"),
   id = "navbar",
   
@@ -516,18 +515,18 @@ ui <- navbarPage(
       
       .btn-search:hover { opacity: 0.9; transform: translateY(-2px); }
       
-      .btn-warning {
+      .btn-random {
       font-size: 14px;
       padding: 14px 20px;
       border-radius: 12px;
       background-color: #ff6b6b;
       color: white;
       border: none;
-      box-shadow: 0px 6px 20px rgba(255, 107, 107, 0.5);
+      box-shadow: 0px 4px 15px rgba(255, 107, 107, 0.4);
       font-weight: bold;
       }
 
-      .btn-warning:hover { opacity: 0.9; transform: translateY(-2px); }
+      .btn-random:hover {background-color: #ff5555; opacity: 0.9; transform: translateY(-2px); }
       
       .btn-deselect {
         background: #e0e0e0;
@@ -807,7 +806,7 @@ ui <- navbarPage(
                    3,
                    actionButton("search", "🔍 Trouver mon film", class = "btn-search btn-block btn-lg"),
                    br(),
-                   actionButton("random", "🎲 Au hasard !", class = "btn btn-warning btn-block"),
+                   actionButton("random", "🎲 Au hasard !", class = "btn btn-random btn-block"),
                    br(),
                    
                    h3("J'ai envie de...", style = "color: white;"),
