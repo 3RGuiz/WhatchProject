@@ -1,0 +1,6 @@
+On ne pouvait pas publier sur Shinyapps.io avec une variable cachée (pour la clé API) afin qu’elle ne soit pas dans le code source et accessible à tous. Il faut donc la publier sur Posit Cloud, disponible à l’adresse suivante : https://connect.posit.cloud/. Il faut créer un compte et connecter le compte Posit Cloud à son GitHub.
+Après avoir créé l’application (script Shiny sur R « app.R » dans un dossier), il est plus propre de créer un dépôt avec seulement le dossier de l’application, qui contient l’« app.R » et les fichiers nécessaires au bon déroulement de l’application.
+ATTENTION : dans ce dossier, il doit obligatoirement apparaître un fichier manifest.json (qui fournira à Connect Cloud les informations nécessaires pour reconstruire notre contenu lors de la publication).
+Pour cela, il suffit de renseigner dans sa console R :
+Aller dans le bon répertoire ou noter dans la console (setwd("C:/Users/…")) ; puis finalement entrer rsconnect::writeManifest() pour créer le manifest.json.
+Une fois cela terminé, après publication, il faut aller dans « Settings », puis dans l’onglet « Vars », cliquer sur "Add Variable" et rentrer sa valeur discrète (clé API).
