@@ -1,0 +1,19 @@
+On peut finalement exporter sur Shinyapps.io avec un dossier caché. Il ne sera pas à ajouter manuellement comme sur Posit Cloud. En effet, Shinyapps.io permet de publier une application qui utilise des données extérieures au code, contrairement à Posit Cloud. C’est pour cela que nous avons quand même exporté sur Shinyapps.
+
+Il faut simplement le faire à la main. Comme déjà expliqué, la clé API n’est pas posée dans le code R, mais dans un fichier « .Renviron » en tant que fichier caché.
+
+Pour publier manuellement, il faut écrire dans la console :
+
+setwd("C:/Users/…")
+file.edit(".Renviron")
+
+rsconnect::deployApp(
+  appFiles = c(
+    "app.R",
+    ".Renviron",
+    "..."  # ← Ajouter ici les noms de tous les fichiers nécessaires (tableaux de données, images…)
+  ),
+  server = "shinyapps.io",
+  account = "son_nom",
+  forceUpdate = TRUE
+)
