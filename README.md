@@ -195,12 +195,12 @@ sliderInput("min_rating", "Note minimale",
             min = 5.0, max = 9.0, value = 6.0, step = 0.1)
 ```
 
-**Boutons d'action** :
-- **" Trouver mon film"** : Recherche selon critères
-- **" Au hasard !"** : Film aléatoire bien noté (≥7.5, ≥5000 votes)
-- **" Désélectionner"** : Réinitialiser la sélection
+Boutons d'action :
+- " Trouver mon film" : Recherche selon critères
+- " Au hasard !" : Film aléatoire bien noté (≥7.5, ≥5000 votes)
+- " Désélectionner" : Réinitialiser la sélection
 
-#### **Colonne droite** : Résultats
+#### Colonne droite : Résultats
 
 **Statistiques en temps réel** :
 ```
@@ -238,7 +238,7 @@ sliderInput("min_rating", "Note minimale",
 | **Voyager** | Aventures et découvertes exotiques | Adventure | 0.6 | 6.8 | any |
 | **En famille** | Films adaptés à tous les âges | Family, Animation | 0.8 | 7.0 | moyen |
 
-**Genres exclus** : Horror, War, Thriller, Crime
+Genres exclus : Horror, War, Thriller, Crime
 
 ---
 
@@ -280,13 +280,12 @@ sliderInput("min_rating", "Note minimale",
 
 ### Principe : Le paramètre Alpha
 
-L'algorithme repose sur un **équilibre qualité/popularité** :
+L'algorithme repose sur un équilibre qualité/popularité :
 
 ```r
 composite_score = (1 - alpha) × quality_score + alpha × popularity_score
 ```
 
-**Où :**
 - `alpha` ∈ [0, 1] : paramètre d'équilibre
 - `quality_score` ∈ [0, 1] : note IMDb normalisée
 - `popularity_score` ∈ [0, 1] : popularité (log des votes normalisé)
@@ -318,7 +317,6 @@ log_votes = log1p(votes)
 popularity_score = (log_votes - min) / (max - min)
 ```
 
-**Pourquoi le logarithme ?**
 
 Sans log, un film avec 1M de votes écraserait un film avec 10k votes.
 
@@ -328,7 +326,7 @@ Avec log :
 - 10,000 votes → log ≈ 4.0
 - 100,000 votes → log ≈ 5.0
 
-L'échelle devient **proportionnelle** au lieu de **linéaire**.
+L'échelle devient proportionnelle au lieu de linéaire.
 
 ### Filtres appliqués
 
@@ -342,7 +340,7 @@ filter(map_lgl(genres_list, ~ any(.x %in% config$genres)))
 filter(map_lgl(genres_list, ~ !any(.x %in% config$exclude_genres)))
 ```
 
-**Exemple "Pleurer"** :
+Exemple "Pleurer" :
 - Genres recherchés : Drama
 - Genres exclus : Horror, Action
 - Résultat : Drames purs uniquement
@@ -486,23 +484,22 @@ source("app.R")
 shiny::runApp("app.R")
 ```
 
-### Workflow type
 
 #### Scénario 1 : Recherche par émotion
 
-1. **Page d'accueil** → Cliquer sur "Commencer"
-2. **Sélectionner une émotion** (ex: "Rire")
+1. Page d'accueil → Cliquer sur "Commencer"
+2. Sélectionner une émotion (ex: "Rire")
 3. Le bouton devient violet (actif)
 4. *(Optionnel)* Ajuster les options avancées
-5. Cliquer sur **" Trouver mon film"**
+5. Cliquer sur " Trouver mon film"
 6. Explorer les résultats dans le tableau
-7. **Cliquer sur un titre** pour voir les détails
+7. Cliquer sur un titre pour voir les détails
 8. Modal avec affiche, synopsis, acteurs, streaming
-9. **"← Retour"** pour revenir aux résultats
+9. "← Retour" pour revenir aux résultats
 
 #### Scénario 2 : Film au hasard
 
-1. Cliquer directement sur **"Au hasard !"**
+1. Cliquer directement sur "Au hasard !"
 2. Un film bien noté (≥7.5, ≥5000 votes) s'affiche
 3. Fond jaune pour le distinguer
 4. Cliquer sur le titre pour les détails
@@ -511,117 +508,43 @@ shiny::runApp("app.R")
 
 #### "Je veux pleurer devant un drame"
 
-**Configuration** :
-- Émotion : **Pleurer** (alpha=0.2, note min 7.0)
+Configuration :
+- Émotion : Pleurer (alpha=0.2, note min 7.0)
 - Genres : Drama uniquement
 - Exclusions : Horror, Action
 
-**Résultat** :
+Résultat :
 - Priorité qualité (80%)
 - Drames purs, émouvants
 - Ex: "Schindler's List", "The Shawshank Redemption"
 
-#### "Film d'action récent et populaire"
+#### Film d'action récent et populaire
 
-**Configuration** :
-- Émotion : **Action** (alpha=0.7)
+Configuration :
+- Émotion : Action (alpha=0.7)
 - Options : Période 2015-2026
 
-**Résultat** :
+Résultat :
 - Priorité popularité (70%)
 - Blockbusters récents
 - Ex: "John Wick 4", "Top Gun: Maverick"
 
 #### "Pépite méconnue de science-fiction"
 
-**Configuration** :
-- Émotion : **Surprise** (alpha=0.1, boost +20%)
+Configuration :
+- Émotion : Surprise (alpha=0.1, boost +20%)
 - Genres : Mystery, Sci-Fi
 
-**Résultat** :
+Résultat :
 - Films peu connus mais excellents
 - Ex: "Coherence", "Primer", "Moon"
 
 ---
 
-##  Difficultés rencontrées et solutions
-
-### 1. Taille des datasets IMDb
-
-**Problème** : 10+ millions d'entrées, plusieurs centaines de Mo
-
-**Solution** :
-- Filtrage **avant chargement** (lecture ligne par ligne)
-- Conservation uniquement des films
-- Sauvegarde RDS compressée (~50 Mo)
-
-### 2. Gestion des genres multiples
-
-**Problème** : Un film peut avoir plusieurs genres
-
-**Solution** :
 ```r
 genres_list <- str_split(genres, ",")
 filter(map_lgl(genres_list, ~ any(.x %in% config$genres)))
 ```
-
-### 3. Rate limiting API TMDB
-
-**Problème** : 40 requêtes/10 secondes maximum
-
-**Solution** :
-- Récupération à la demande uniquement
-- Progress bars pour patience utilisateur
-- Gestion d'erreurs avec fallback IMDb
-
-### 4. Synchronisation UI/Server
-
-**Problème** : État visuel des boutons
-
-**Solution** :
-```javascript
-$('.emotion-btn').removeClass('active');
-$(this).addClass('active');
-Shiny.setInputValue('emotion_selected', key);
-```
-
-### 5. Performance du filtrage
-
-**Problème** : 600k films à filtrer
-
-**Solution** :
-- Pré-calcul des scores au chargement
-- Utilisation de tidyverse optimisé
-- Limitation à 100 résultats
-
----
-
-## Améliorations futures
-
-### Fonctionnalités
-
-- [ ] **Système de favoris** : Sauvegarder des films
-- [ ] **Historique** : Ne pas recommander les films vus
-- [ ] **Mode comparaison** : Comparer 2-3 films
-- [ ] **Export PDF/CSV** : Liste de films
-- [ ] **Partage de listes** : Lien partageable
-- [ ] **Notation personnelle** : Affiner les recommandations
-
-### Technique
-
-- [ ] **Déploiement web** : shinyapps.io ou Heroku
-- [ ] **Base de données** : PostgreSQL
-- [ ] **Cache API TMDB** : Réduire les requêtes
-- [ ] **Tests unitaires** : Validation de l'algorithme
-- [ ] **Responsive design** : Optimisation mobile
-- [ ] **PWA** : Installation sur mobile
-
-### Algorithme
-
-- [ ] **Machine Learning** : Apprentissage des préférences
-- [ ] **Clustering** : Similarité au-delà des genres
-- [ ] **Analyse de sentiments** : Extraction depuis synopsis
-- [ ] **Score de diversité** : Éviter la redondance
 
 ---
 
@@ -629,12 +552,12 @@ Shiny.setInputValue('emotion_selected', key);
 
 | Membre | Responsabilités |
 |--------|-----------------|
-| **Guillaume CAUBARRERE** | Architecture globale, algorithme de scoring, gestion IMDb |
-| **Emile PERRAUD** | Interface utilisateur (UI), design CSS, expérience utilisateur |
-| **Valentin MASSON** | Intégration API TMDB, configuration des émotions, tests |
-| **Alexis BARBERET** | Documentation, README, système de filtrage, gestion genres |
+| Guillaume CAUBARRERE | Architecture globale, algorithme de scoring, gestion IMDb |
+| Emile PERRAUD | Interface utilisateur (UI), design CSS, expérience utilisateur, readme |
+| Valentin MASSON | Intégration API TMDB, configuration des émotions, tests |
+| Alexis BARBERET | Documentation, README, système de filtrage, gestion genres |
 
-**Travail collectif** : Réflexion sur les 17 émotions, calibrage alpha, choix des exclusions de genres, tests utilisateurs
+Travail collectif : Réflexion sur les 17 émotions, calibrage alpha, choix des exclusions de genres, tests utilisateurs
 
 ---
 
@@ -642,11 +565,11 @@ Shiny.setInputValue('emotion_selected', key);
 
 ### Données
 
-- **IMDb Datasets** : https://datasets.imdbws.com/
+- IMDb Datasets : https://datasets.imdbws.com/
   - Documentation : https://www.imdb.com/interfaces/
-  - Licence non-commerciale
+  
 
-- **TMDB API** : https://www.themoviedb.org/documentation/api
+- TMDB API : https://www.themoviedb.org/documentation/api
   - Clé gratuite : https://www.themoviedb.org/settings/api
 
 ### Technologies
@@ -659,7 +582,7 @@ Shiny.setInputValue('emotion_selected', key);
 
 
 
-## **Équipe de développement** :
+## Équipe de développement:
 - Guillaume CAUBARRERE
 - Emile PERRAUD
 - Valentin MASSON
@@ -668,16 +591,15 @@ Shiny.setInputValue('emotion_selected', key);
 ---
 
 ## Conclusion
+Whatch propose une approche innovante de la recommandation de films en privilégiant l'approche émotionnelle plutôt que les genres traditionnels. 
 
-**What'ch ?** propose une approche innovante de la recommandation de films en privilégiant l'**approche émotionnelle** plutôt que les genres traditionnels. 
+Avec 17 émotions soigneusement calibrées, un algorithme simple mais efficace basé sur le paramètre alpha, et une intégration complète avec TMDB, l'application offre une expérience de découverte cinématographique personnalisée et surprenante.
 
-Avec **17 émotions** soigneusement calibrées, un algorithme simple mais efficace basé sur le paramètre alpha, et une intégration complète avec TMDB, l'application offre une expérience de découverte cinématographique personnalisée et surprenante.
+**Base de données: ~600 000 films  
+**Période couverte : 1900-2026  
 
-**Base de données** : ~600 000 films  
-**Période couverte** : 1900-2026  
-**Note moyenne** : 7.2/10
 
 ---
 
-*"Abracadabra, on choisit pour toi !"* 
-**Dernière mise à jour** : Février 2026
+"Abracadabra, on choisit pour toi !"* 
+
